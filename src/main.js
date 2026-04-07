@@ -8,3 +8,4 @@ button.addEventListener("click", async () => {
   const data = await searchRestaurants(input.value);
   renderResults(data);
 });
+
