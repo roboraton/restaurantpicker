@@ -6,32 +6,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>restaurantpicker</title>
     <script type="module" crossorigin src="/restaurantpicker/assets/index-YcxY8Ra_.js"></script>
+    <link rel="stylesheet" href="./src/css/style.css" />
   </head>
+
   <body>
 
     <h1>Restaurant Picker</h1>
 
-  <input id="searchInput" />
-  <button id="searchBtn">Search</button>
+    <input id="locationInput" placeholder="Enter your location (optional)" />
 
-  <select id="typeFilter">
-    <option value="">All</option>
-  </select>
+    <input id="searchInput" />
+    <button id="searchBtn">Search</button>
 
-  <select id="ratingFilter">
-    <option value="">All ratings</option>
-    <option value="3">3+</option>
-    <option value="4">4+</option>
-  </select>
+    <select id="typeFilter">
+      <option value="">All prices</option>
+      <option value="1">$</option>
+      <option value="2">$$</option>
+      <option value="3">$$$</option>
+    </select>
 
-  <button id="randomBtn">Surprise Me</button>
+    <select id="distanceFilter">
+      <option value="">All distances</option>
+      <option value="1">1 mile</option>
+      <option value="5">5 miles</option>
+      <option value="10">10 miles</option>
+    </select>
 
-  <div id="results"></div>
-  <div id="details"></div>
+    <button id="resetFilters">Reset Filters</button>
 
-  <div id="map" style="width: 100%; height: 400px;"></div>
+    <select id="ratingFilter">
+      <option value="">All ratings</option>
+      <option value="3">3+</option>
+      <option value="4">4+</option>
+    </select>
 
-  <script src="main.js"></script>
+    <button id="randomBtn">Surprise Me</button>
+
+    <div id="results"></div>
+    <div id="details"></div>
+
+    <div id="map" style="width: 100%; height: 400px;"></div>
+
+    <script src="main.js"></script>
 
   </body>
 </html>

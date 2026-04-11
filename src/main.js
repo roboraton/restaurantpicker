@@ -2,6 +2,16 @@ import { handleSearch } from "./search.js";
 import { filterRestaurants } from "./filters.js";
 import { pickRandom } from "./random.js";
 import { renderRestaurants, highlightRestaurant, showDetails } from "./ui.js";
+import { generateMapHTML } from "./map.js";
+import { getUserLocation } from "./js/location.js";
+
+let userLocation = null;
+
+async function init() {
+  userLocation = await getUserLocation();
+}
+
+init();
 
 const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
 
@@ -18,10 +28,20 @@ let state = {
 const input = document.querySelector("#searchInput");
 const button = document.querySelector("#searchBtn");
 const randomBtn = document.querySelector("#randomBtn");
+const manualLocationInput = document.querySelector("#manualLocation");
 
-// SEARCH
+// SEARCH BASED ON LOCATION PRIORITY: manual > geolocation
 button.addEventListener("click", async () => {
-  restaurants = await handleSearch(input.value);
+  let query = input.value;
+
+  // prioridad: manual > geolocation
+  if (manualLocationInput.value) {
+    query += ` near ${manualLocationInput.value}`;
+  } else if (userLocation) {
+    query += ` near ${userLocation.lat},${userLocation.lng}`;
+  }
+
+  restaurants = await handleSearch(query);
   updateUI();
 });
 
@@ -29,6 +49,12 @@ button.addEventListener("click", async () => {
 input.addEventListener("input", (e) => {
   state.search = e.target.value;
   updateUI();
+});
+
+input.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    button.click();
+  }
 });
 
 // FILTERS
@@ -39,6 +65,16 @@ document.getElementById("typeFilter").addEventListener("change", (e) => {
 
 document.getElementById("ratingFilter").addEventListener("change", (e) => {
   state.filters.rating = e.target.value ? parseInt(e.target.value) : null;
+  updateUI();
+});
+
+document.getElementById("resetFilters").addEventListener("click", () => {
+  state.filters.type = null;
+  state.filters.rating = null;
+
+  document.getElementById("typeFilter").value = "";
+  document.getElementById("ratingFilter").value = "";
+
   updateUI();
 });
 

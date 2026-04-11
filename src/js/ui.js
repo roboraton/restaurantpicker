@@ -30,10 +30,21 @@ export function showDetails(r, apiKey) {
   const details = document.getElementById("details");
 
   details.innerHTML = `
-    <h2>${r.name}</h2>
-    <p>${r.type}</p>
+    <h2>${r.name || "Unknown name"}</h2>
 
-    <img src="${r.image}" style="width:100%; border-radius:8px;" />
+    <p><strong>Type:</strong> ${r.type || "Not available"}</p>
+
+    <p><strong>Rating:</strong> ${r.rating ? r.rating : "Not available"}</p>
+
+    <p><strong>Address:</strong> ${r.address || "Not available"}</p>
+
+    <p><strong>Open/Close:</strong> ${r.hours || "Not available"}</p>
+
+    ${
+      r.image
+        ? `<img src="${r.image}" style="width:100%; border-radius:8px;" />`
+        : "<p>No image available</p>"
+    }
 
     ${generateMapHTML(r, apiKey)}
   `;
