@@ -1,10 +1,23 @@
+// =====================
+// IMPORTS
+// =====================
 import { handleSearch } from "./js/search.js";
 import { filterRestaurants } from "./js/filters.js";
 import { pickRandom } from "./js/random.js";
-import { renderRestaurants, highlightRestaurant, showDetails, renderFavorites } from "./js/ui.js";
+import {
+  renderRestaurants,
+  highlightRestaurant,
+  showDetails,
+  renderFavorites,
+  renderHistory,
+} from "./js/ui.js";
 import { getUserLocation } from "./js/location.js";
 import { initMap, updateMarkers, setUserLocation } from "./js/map.js";
+import { addToHistory } from "./js/history.js";
 
+// =====================
+// STATE
+// =====================
 let restaurants = [];
 let userLocation = null;
 
@@ -15,7 +28,9 @@ let state = {
   },
 };
 
-// 🔥 DOM (solo lo que sí existe ahora)
+// =====================
+// DOM
+// =====================
 const randomBtn = document.querySelector("#randomBtn");
 const typeFilter = document.querySelector("#typeFilter");
 const ratingFilter = document.querySelector("#ratingFilter");
@@ -50,7 +65,8 @@ async function init() {
     console.log("Location not available");
   }
 
-  renderFavorites(); // 🔥 carga favoritos al inicio
+  renderFavorites();
+  renderHistory();
 }
 
 init();
@@ -63,7 +79,7 @@ function getVisibleResults() {
 }
 
 // =====================
-// TYPE → SEARCH ( reemplaza input)
+// TYPE → SEARCH
 // =====================
 typeFilter.addEventListener("change", async (e) => {
   const query = e.target.value;
@@ -77,7 +93,6 @@ typeFilter.addEventListener("change", async (e) => {
   }
 
   restaurants = await handleSearch(query);
-
   updateUI();
 });
 
@@ -102,13 +117,12 @@ resetFiltersBtn.addEventListener("click", () => {
   typeFilter.value = "";
   ratingFilter.value = "";
 
-  restaurants = []; // 🔥 limpia resultados también
-
+  restaurants = [];
   updateUI();
 });
 
 // =====================
-// RANDOM 
+// RANDOM
 // =====================
 randomBtn.addEventListener("click", () => {
   const visible = getVisibleResults();
@@ -139,15 +153,21 @@ function updateUI() {
 }
 
 // =====================
-// MAP CLICK → DETAILS
+// EVENTS
 // =====================
+
+// click desde mapa / favorites / history
 document.addEventListener("restaurantSelected", (e) => {
   showDetails(e.detail);
 });
 
-// =====================
-// FAVORITES UPDATE
-// =====================
+// favoritos (por si decides usar evento después)
 document.addEventListener("favoritesUpdated", () => {
   renderFavorites();
+});
+
+// 🔥 HISTORY REAL (esto es lo que faltaba)
+document.addEventListener("addToHistory", (e) => {
+  addToHistory(e.detail);
+  renderHistory();
 });
