@@ -8,15 +8,26 @@
 
 /* 🎨 BASE */
 body {
-  background-color: #f5f5f5; /* light gray */
-  color: #2f3e2f; /* dark green suave */
+  background-color: #f5f5f5;
+  color: #2f3e2f;
   padding: 20px;
 }
 
-/* 🧱 CONTENEDOR */
-.container {
-  max-width: 900px;
-  margin: 0 auto;
+/* 🧾 TÍTULOS */
+h2 {
+  margin-bottom: 10px;
+}
+
+h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+/* 📘 INSTRUCCIONES */
+.instructions {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 10px;
 }
 
 /* 🔍 INPUT Y FILTROS */
@@ -37,7 +48,7 @@ input:focus, select:focus {
 /* 🔘 BOTONES */
 button {
   padding: 10px 15px;
-  background-color: #ff7a00; /* naranja acento */
+  background-color: #ff7a00;
   color: white;
   border: none;
   border-radius: 6px;
@@ -50,68 +61,130 @@ button:hover {
   transform: scale(1.05);
 }
 
-/* 📋 RESULTADOS */
-#results {
+/* 🧱 LAYOUT PRINCIPAL */
+.main-layout {
+  display: flex;
+  gap: 20px;
   margin-top: 20px;
-  display: grid;
-  gap: 10px;
 }
 
-/* 🍽️ CARD RESTAURANTE */
+/* 🗺️ MAPA */
+#map {
+  width: 60%;
+  height: 450px;
+  border-radius: 10px;
+  background: #ddd;
+}
+
+/* 📋 PANEL RESULTADOS */
+.results-panel {
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 📋 LISTA RESULTADOS */
+#results {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+/* 🍽️ CARD */
 #results div {
-  background-color: white;
-  padding: 15px;
-  border-radius: 8px;
-  border-left: 5px solid #2f5d3a; /* verde */
+  background: white;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border-left: 4px solid #2f5d3a;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: 0.2s;
+  font-size: 14px;
 }
 
 #results div:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  transform: scale(1.02);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
 }
 
-/* 🎲 HIGHLIGHT ANIMACIÓN */
+.result-card {
+  transition: all 0.2s ease;
+}
+
 .highlight {
-  background-color: #ffe5cc;
-  border-left: 5px solid #ff7a00;
-  transform: scale(1.05);
+  background: #ffe5cc;
+  border-left: 4px solid #ff7a00;
+  transform: scale(1.02);
+}
+
+/* 📝 TEXTO CARD */
+#results p {
+  margin: 2px 0 0 0;
+  font-size: 13px;
+  color: #666;
 }
 
 /* 🔎 DETALLES */
 #details {
-  margin-top: 25px;
-  padding: 20px;
-  background-color: white;
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 15px;
+  background: #f9f9f9;
   border-radius: 10px;
   border-top: 4px solid #ff7a00;
   box-shadow: 0 5px 20px rgba(0,0,0,0.08);
 }
 
-/* 🗺️ MAPA */
-iframe {
-  margin-top: 15px;
-  border-radius: 8px;
-}
-
-/* 🧾 TÍTULOS */
-h2 {
-  margin-bottom: 10px;
-}
-
-h3 {
-  margin-bottom: 5px;
-}
-
 /* 📱 RESPONSIVE */
-@media (max-width: 600px) {
-  body {
-    padding: 10px;
+@media (max-width: 768px) {
+  .main-layout {
+    flex-direction: column;
   }
 
-  input, select, button {
+  #map {
     width: 100%;
-    margin-bottom: 10px;
+    height: 300px;
   }
+
+  .results-panel {
+    width: 100%;
+  }
+
+  button {
+    width: 100%;
+  }
+
+  input, select {
+    width: 100%;
+  }
+}
+
+/* 🎴 CARD DETALLE ANIMADA */
+#details {
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 15px;
+  background: white;
+  border-radius: 12px;
+  border-top: 4px solid #ff7a00;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+
+  opacity: 0;
+  transform: translateY(20px) scale(0.95);
+  transition: all 0.3s ease;
+}
+
+/* 👇 estado visible */
+#details.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* imagen más bonita */
+#details img {
+  width: 100%;
+  border-radius: 10px;
+  margin-top: 10px;
 }

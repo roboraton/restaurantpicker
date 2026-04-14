@@ -2,10 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/restaurantpicker/favicon.svg" />
+    <link rel="icon" href="/restaurantpicker/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>restaurantpicker</title>
-    <script type="module" crossorigin src="/restaurantpicker/assets/index-YcxY8Ra_.js"></script>
+    <title>Restaurant Picker</title>
+
     <link rel="stylesheet" href="./src/css/style.css" />
   </head>
 
@@ -13,41 +13,64 @@
 
     <h1>Restaurant Picker</h1>
 
-    <input id="locationInput" placeholder="Enter your location (optional)" />
+    <p class="instructions">
+    Search for a type of food (like "chicken" or "beef"), then use filters or press "Surprise Me" to pick one.
+    </p>
 
-    <input id="searchInput" />
+    <!--  SEARCH -->
+    
+    <label for="manualLocation">Enter Location:</label>
+    <input id="manualLocation" placeholder="Enter your location (optional)" />
+    
+    <label for="searchInput">Search Food:</label>
+    <input id="searchInput" placeholder="Search food..." />
+    
     <button id="searchBtn">Search</button>
 
+    <!--  FILTERS -->
     <select id="typeFilter">
+      <label for ="typeFilter">Filter by price:</label>
       <option value="">All prices</option>
-      <option value="1">$</option>
-      <option value="2">$$</option>
-      <option value="3">$$$</option>
+      <option value="">$</option>
+      <option value="4">$$</option>
+      <option value="5">$$$</option>
     </select>
 
-    <select id="distanceFilter">
-      <option value="">All distances</option>
-      <option value="1">1 mile</option>
-      <option value="5">5 miles</option>
-      <option value="10">10 miles</option>
+    <select id="ratingFilter">
+      <label for="ratingFilter">Filter by rating:</label>
+      <option value="">All ratings</option>
+      <option value="3">⭐⭐⭐</option>
+      <option value="4">⭐⭐⭐⭐</option>
+      <option value="5">⭐⭐⭐⭐⭐</option>
     </select>
 
     <button id="resetFilters">Reset Filters</button>
 
-    <select id="ratingFilter">
-      <option value="">All ratings</option>
-      <option value="3">3+</option>
-      <option value="4">4+</option>
-    </select>
+    <!--  MAIN LAYOUT -->
+    <div class="main-layout">
 
-    <button id="randomBtn">Surprise Me</button>
+      <!--  MAP -->
+      <div id="map"></div>
 
-    <div id="results"></div>
+      <!--  RESULTS -->
+      <div class="results-panel">
+        <div id="results"></div>
+        <button id="randomBtn">Surprise Me</button>
+      </div>
+
+    </div>
+
+    <!--  DETAILS -->
     <div id="details"></div>
 
-    <div id="map" style="width: 100%; height: 400px;"></div>
+    <!--  MAIN JS -->
+    <script type="module" src="/src/main.js"></script>
 
-    <script src="main.js"></script>
+    <!--  CLUSTER -->
+    <script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
+
+    <!--  GOOGLE MAPS -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDOMKdLjaLs4UiaMp1rqW0kNgmR8IuoD9M&callback=initMap" async defer></script>
 
   </body>
 </html>

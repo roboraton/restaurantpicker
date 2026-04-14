@@ -1,21 +1,38 @@
 let animationInterval = null;
 
-export function pickRandom(filtered, highlight, showDetails) {
-  if (!filtered.length) return alert("No results");
+export function pickRandom(restaurants, highlightRestaurant, onSelected) {
+  if (!restaurants || restaurants.length === 0) {
+    return;
+  }
 
-  let count = 0;
   clearInterval(animationInterval);
 
-  animationInterval = setInterval(() => {
-    const temp = filtered[Math.floor(Math.random() * filtered.length)];
-    highlight(temp);
-    count++;
+  let currentIndex = 0;
+  const sequence = [...restaurants];
 
-    if (count > 15) {
+  // mezcla simple para que la ruleta no siempre recorra igual
+  for (let i = sequence.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [sequence[i], sequence[j]] = [sequence[j], sequence[i]];
+  }
+
+  const finalRestaurant =
+    sequence[Math.floor(Math.random() * sequence.length)];
+
+  let steps = 0;
+  const maxSteps = Math.min(18, Math.max(8, sequence.length * 2));
+
+  animationInterval = setInterval(() => {
+    const currentRestaurant = sequence[currentIndex % sequence.length];
+    highlightRestaurant(currentRestaurant);
+
+    currentIndex++;
+    steps++;
+
+    if (steps >= maxSteps) {
       clearInterval(animationInterval);
-      const selected = filtered[Math.floor(Math.random() * filtered.length)];
-      highlight(selected);
-      showDetails(selected);
+      highlightRestaurant(finalRestaurant);
+      onSelected(finalRestaurant);
     }
-  }, 100);
+  }, 120);
 }
