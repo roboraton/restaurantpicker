@@ -3,10 +3,10 @@
 ===================== */
 body {
   margin: 0;
+  padding: 20px;
   font-family: system-ui, "Segoe UI", Roboto, sans-serif;
   background: #f5f5f5;
   color: #2f3e2f;
-  padding: 20px;
 }
 
 h1 {
@@ -16,6 +16,28 @@ h1 {
 .instructions {
   margin-bottom: 20px;
   color: #666;
+}
+
+/* =====================
+   CONTROLES
+===================== */
+select,
+button {
+  padding: 10px;
+  margin: 10px 10px 10px 0;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+button {
+  background-color: #ff7a00;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #e66900;
 }
 
 /* =====================
@@ -41,28 +63,7 @@ h1 {
 }
 
 /* =====================
-   CONTROLES
-===================== */
-select, button {
-  padding: 10px;
-  margin: 10px 10px 10px 0;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-}
-
-button {
-  background-color: #ff7a00;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #e66900;
-}
-
-/* =====================
-   RESULT CARDS
+   RESULTADOS
 ===================== */
 #results {
   display: flex;
@@ -72,6 +73,9 @@ button:hover {
   overflow-y: auto;
 }
 
+/* =====================
+   TARJETAS (GLOBAL)
+===================== */
 .result-card {
   background: white;
   padding: 10px;
@@ -79,13 +83,18 @@ button:hover {
   border-left: 4px solid #2f5d3a;
   cursor: pointer;
   transition: 0.2s;
+  animation: fadeSlide 0.3s ease;
 }
 
 .result-card:hover {
   transform: scale(1.02);
 }
 
-/* highlight base */
+.result-card p:last-child {
+  font-weight: 500;
+}
+
+/* estado seleccionado */
 .highlight {
   background: #ffe5cc;
   border-left: 4px solid #ff7a00;
@@ -113,9 +122,7 @@ button:hover {
 
 /* =====================
    FAVORITES
-===================== 
- */
-
+===================== */
 #favorites {
   display: flex;
   gap: 10px;
@@ -127,18 +134,8 @@ button:hover {
   flex-shrink: 0;
 }
 
-.result-card {
-  background: white;
-  padding: 10px;
-  border-radius: 8px;
-  border-left: 4px solid #2f5d3a;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-
 /* =====================
-   FAVORITES BUTTON
+   FAVORITE BUTTON
 ===================== */
 #favBtn {
   font-size: 20px;
@@ -155,7 +152,19 @@ button:hover {
    ANIMATIONS
 ===================== */
 
-/* aparición */
+/* entrada general */
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* aparición tipo pop */
 @keyframes popIn {
   0% {
     transform: scale(0.6);
@@ -171,7 +180,7 @@ button:hover {
   animation: popIn 0.3s ease forwards;
 }
 
-/* desaparición */
+/* desaparición tipo snap */
 @keyframes snapOut {
   0% {
     opacity: 1;
@@ -223,4 +232,36 @@ button:hover {
   .results-panel {
     width: 100%;
   }
+}
+
+/* =====================
+   CARD FLIP
+===================== */
+.card-flip {
+  perspective: 1000px;
+}
+
+.card-inner {
+  position: relative;
+  width: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.6s;
+}
+
+.card-flip:hover .card-inner {
+  transform: rotateY(180deg);
+}
+
+.card-front,
+.card-back {
+  position: absolute;
+  width: 100%;
+  backface-visibility: hidden;
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.card-back {
+  transform: rotateY(180deg);
 }

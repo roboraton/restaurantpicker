@@ -3,6 +3,7 @@
 // =====================
 import { addFavorite, getFavorites, removeFavorite } from "./favorites.js";
 import { getHistory, clearHistory } from "./history.js";
+import { getMealDetails } from "./api.js";
 
 // =====================
 // RENDER RESULTS
@@ -17,7 +18,14 @@ export function renderRestaurants(data, onClick) {
 
     div.innerHTML = `
       <h3>${r.name}</h3>
-      <p>${r.type || "Unknown type"}</p>
+
+      <p style="font-size:12px; color:#666; margin:2px 0;">
+        ${r.type || "Unknown type"}
+      </p>
+
+      <p style="font-size:12px; color:#999; margin:0;">
+        ⭐ ${r.rating ?? "-"} | ${"$".repeat(r.price ?? 1)}
+      </p>
     `;
 
     div.addEventListener("click", () => {
@@ -33,20 +41,18 @@ export function renderRestaurants(data, onClick) {
 }
 
 // =====================
-// HIGHLIGHT (ruleta + ganador)
+// HIGHLIGHT
 // =====================
 export function highlightRestaurant(selected) {
   const cards = document.querySelectorAll("#results .result-card");
 
   cards.forEach((card) => {
-    card.classList.remove("highlight");
-    card.classList.remove("winner");
+    card.classList.remove("highlight", "winner");
 
     const title = card.querySelector("h3")?.textContent?.trim();
 
     if (title === selected.name) {
-      card.classList.add("highlight");
-      card.classList.add("winner");
+      card.classList.add("highlight", "winner");
 
       setTimeout(() => {
         card.classList.remove("winner");
@@ -58,33 +64,58 @@ export function highlightRestaurant(selected) {
 }
 
 // =====================
-// SHOW DETAILS
+// SHOW DETAILS (CON FLIP)
 // =====================
-export function showDetails(r) {
+export async function showDetails(r) {
   const details = document.getElementById("details");
 
   details.classList.remove("show");
 
+  const full = await getMealDetails(r.id);
+
   details.innerHTML = `
-    <div style="display:flex; justify-content:space-between; align-items:center;">
-      <h2 style="margin:0;">${r.name || "Unknown name"}</h2>
-      <button id="favBtn">❤️</button>
+    <div class="card-flip">
+      <div class="card-inner">
+
+        <!-- FRONT -->
+        <div class="card-front">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h2 style="margin:0;">${r.name}</h2>
+            <button id="favBtn">❤️</button>
+          </div>
+
+          <p><strong>Type:</strong> ${r.type || "Not available"}</p>
+
+          ${
+            r.image
+              ? `<img src="${r.image}" style="width:100%; border-radius:8px; margin-top:10px;" />`
+              : ""
+          }
+        </div>
+
+        <!-- BACK -->
+        <div class="card-back">
+          ${
+            full?.strInstructions
+              ? `<p style="font-size:13px; color:#555;">
+                  ${full.strInstructions.substring(0, 200)}...
+                 </p>`
+              : "<p>No details available</p>"
+          }
+        </div>
+
+      </div>
     </div>
-
-    <p><strong>Type:</strong> ${r.type || "Not available"}</p>
-
-    ${
-      r.image
-        ? `<img src="${r.image}" alt="${r.name}" style="width:100%; border-radius:8px; margin-top:10px;" />`
-        : "<p>No image available</p>"
-    }
   `;
 
   // FAVORITES
-  document.getElementById("favBtn").addEventListener("click", () => {
-    addFavorite(r);
-    renderFavorites();
-  });
+  const favBtn = document.getElementById("favBtn");
+  if (favBtn) {
+    favBtn.addEventListener("click", () => {
+      addFavorite(r);
+      renderFavorites();
+    });
+  }
 
   // HISTORY
   document.dispatchEvent(
@@ -99,7 +130,7 @@ export function showDetails(r) {
 }
 
 // =====================
-// FAVORITES LIST
+// FAVORITES
 // =====================
 export function renderFavorites() {
   const container = document.getElementById("favorites");
@@ -117,10 +148,8 @@ export function renderFavorites() {
     div.className = "result-card pop-in";
 
     div.innerHTML = `
-      <h4 style="margin:0;">${f.name}</h4>
-      <p style="margin:2px 0; font-size:13px; color:#666;">
-        ${f.type || "Unknown type"}
-      </p>
+      <h4>${f.name}</h4>
+      <p style="font-size:13px; color:#666;">${f.type || ""}</p>
       <button data-name="${f.name}">Remove</button>
     `;
 
@@ -143,7 +172,6 @@ export function renderFavorites() {
       };
 
       card.addEventListener("animationend", removeNow, { once: true });
-
       setTimeout(removeNow, 600);
     });
 
@@ -158,7 +186,7 @@ export function renderFavorites() {
 }
 
 // =====================
-// HISTORY LIST
+// HISTORY
 // =====================
 export function renderHistory() {
   const container = document.getElementById("history");
@@ -191,16 +219,18 @@ export function renderHistory() {
     container.appendChild(div);
   });
 
-  document.getElementById("clearHistoryBtn").addEventListener("click", () => {
-    const cards = container.querySelectorAll(".result-card");
+  const btn = document.getElementById("clearHistoryBtn");
 
-    cards.forEach((card) => {
-      card.classList.add("snap-out");
+  if (btn) {
+    btn.addEventListener("click", () => {
+      const cards = container.querySelectorAll(".result-card");
+
+      cards.forEach((card) => card.classList.add("snap-out"));
+
+      setTimeout(() => {
+        clearHistory();
+        renderHistory();
+      }, 400);
     });
-
-    setTimeout(() => {
-      clearHistory();
-      renderHistory();
-    }, 400);
-  });
+  }
 }
