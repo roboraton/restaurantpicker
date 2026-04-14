@@ -4,41 +4,46 @@
     <meta charset="UTF-8" />
     <link rel="icon" href="/restaurantpicker/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script type="module" crossorigin src="/restaurantpicker/assets/index-YcxY8Ra_.js"></script>
+    <!-- <script type="module" crossorigin src="/restaurantpicker/assets/index-YcxY8Ra_.js"></script> -->
     <title>Restaurant Picker</title>
 
     <link rel="stylesheet" href="./src/css/style.css" />
   </head>
 
   <body>
-
     <h1>Restaurant Picker</h1>
 
     <p class="instructions">
-    Search for a type of food (like "chicken" or "beef"), then use filters or press "Surprise Me" to pick one.
+      First choose a food type, then press <strong>“Surprise Me”</strong> to get a random result.
     </p>
 
-    <!--  SEARCH -->
-    
-    <label for="manualLocation">Enter Location:</label>
-    <input id="manualLocation" placeholder="Enter your location (optional)" />
-    
-    <label for="searchInput">Search Food:</label>
-    <input id="searchInput" placeholder="Search food..." />
-    
-    <button id="searchBtn">Search</button>
-
-    <!--  FILTERS -->
+    <!-- FILTERS -->
+    <label for="typeFilter">Choose food type:</label>
     <select id="typeFilter">
-      <label for ="typeFilter">Filter by price:</label>
-      <option value="">All prices</option>
-      <option value="">$</option>
-      <option value="4">$$</option>
-      <option value="5">$$$</option>
+      <option value="">Select a food type</option>
+      <option value="chicken">Chicken</option>
+      <option value="beef">Beef</option>
+      <option value="pasta">Pasta</option>
+      <option value="seafood">Seafood</option>
+      <option value="pork">Pork</option>
+      <option value="lamb">Lamb</option>
+      <option value="goat">Goat</option>
+      <option value="breakfast">Breakfast</option>
+      <option value="dessert">Dessert</option>
+      <option value="vegan">Vegan</option>
+      <option value="vegetarian">Vegetarian</option>
     </select>
 
+    <label for="priceFilter">Filter by price:</label>
+    <select id="priceFilter">
+      <option value="">All prices</option>
+      <option value="1">$</option>
+      <option value="2">$$</option>
+      <option value="3">$$$</option>
+    </select>
+
+    <label for="ratingFilter">Filter by rating:</label>
     <select id="ratingFilter">
-      <label for="ratingFilter">Filter by rating:</label>
       <option value="">All ratings</option>
       <option value="3">⭐⭐⭐</option>
       <option value="4">⭐⭐⭐⭐</option>
@@ -47,31 +52,35 @@
 
     <button id="resetFilters">Reset Filters</button>
 
-    <!--  MAIN LAYOUT -->
-    <div class="main-layout">
+    <!-- FAVORITES -->
+    <div id="favorites"></div>
 
-      <!--  MAP -->
+    <!-- MAIN LAYOUT -->
+    <div class="main-layout">
+      <!-- MAP -->
       <div id="map"></div>
 
-      <!--  RESULTS -->
+      <!-- RESULTS -->
       <div class="results-panel">
         <div id="results"></div>
         <button id="randomBtn">Surprise Me</button>
       </div>
-
     </div>
 
-    <!--  DETAILS -->
+    <!-- DETAILS -->
     <div id="details"></div>
 
-    <!--  MAIN JS -->
+    <!-- MAIN JS -->
     <script type="module" src="/src/main.js"></script>
 
-    <!--  CLUSTER -->
+    <!-- CLUSTER -->
     <script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
 
-    <!--  GOOGLE MAPS -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDOMKdLjaLs4UiaMp1rqW0kNgmR8IuoD9M&callback=initMap" async defer></script>
-
+    <!-- GOOGLE MAPS -->
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBG93NCpZZJ2XA2f9FgUYKWYsWYCIdjqeM&callback=initMap"
+      async
+      defer
+    ></script>
   </body>
 </html>

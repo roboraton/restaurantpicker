@@ -1,7 +1,7 @@
 import { handleSearch } from "./js/search.js";
 import { filterRestaurants } from "./js/filters.js";
 import { pickRandom } from "./js/random.js";
-import { renderRestaurants, highlightRestaurant, showDetails } from "./js/ui.js";
+import { renderRestaurants, highlightRestaurant, showDetails, renderFavorites } from "./js/ui.js";
 import { getUserLocation } from "./js/location.js";
 import { initMap, updateMarkers, setUserLocation } from "./js/map.js";
 
@@ -9,20 +9,21 @@ let restaurants = [];
 let userLocation = null;
 
 let state = {
-  search: "",
   filters: {
     type: null,
     rating: null,
   },
 };
 
-const input = document.querySelector("#searchInput");
-const button = document.querySelector("#searchBtn");
+// 🔥 DOM (solo lo que sí existe ahora)
 const randomBtn = document.querySelector("#randomBtn");
 const typeFilter = document.querySelector("#typeFilter");
 const ratingFilter = document.querySelector("#ratingFilter");
 const resetFiltersBtn = document.querySelector("#resetFilters");
 
+// =====================
+// MAP INIT
+// =====================
 window.initMap = () => {
   initMap();
 
@@ -35,6 +36,9 @@ window.initMap = () => {
   }
 };
 
+// =====================
+// APP INIT
+// =====================
 async function init() {
   try {
     userLocation = await getUserLocation();
@@ -45,46 +49,52 @@ async function init() {
   } catch (error) {
     console.log("Location not available");
   }
+
+  renderFavorites(); // 🔥 carga favoritos al inicio
 }
 
 init();
 
+// =====================
+// HELPERS
+// =====================
 function getVisibleResults() {
-  return filterRestaurants(restaurants, {
-    ...state,
-    search: "",
-  });
+  return filterRestaurants(restaurants, state);
 }
 
-button.addEventListener("click", async () => {
-  const query = input.value.trim();
+// =====================
+// TYPE → SEARCH ( reemplaza input)
+// =====================
+typeFilter.addEventListener("change", async (e) => {
+  const query = e.target.value;
 
-  if (!query) return;
+  state.filters.type = query || null;
+
+  if (!query) {
+    restaurants = [];
+    updateUI();
+    return;
+  }
 
   restaurants = await handleSearch(query);
+
   updateUI();
 });
 
-input.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
-    button.click();
-  }
-});
-
-input.addEventListener("input", (e) => {
-  state.search = e.target.value;
-});
-
-typeFilter.addEventListener("change", (e) => {
-  state.filters.type = e.target.value || null;
-  updateUI();
-});
-
+// =====================
+// RATING FILTER
+// =====================
 ratingFilter.addEventListener("change", (e) => {
-  state.filters.rating = e.target.value ? parseInt(e.target.value) : null;
+  state.filters.rating = e.target.value
+    ? parseInt(e.target.value)
+    : null;
+
   updateUI();
 });
 
+// =====================
+// RESET
+// =====================
 resetFiltersBtn.addEventListener("click", () => {
   state.filters.type = null;
   state.filters.rating = null;
@@ -92,14 +102,19 @@ resetFiltersBtn.addEventListener("click", () => {
   typeFilter.value = "";
   ratingFilter.value = "";
 
+  restaurants = []; // 🔥 limpia resultados también
+
   updateUI();
 });
 
+// =====================
+// RANDOM 
+// =====================
 randomBtn.addEventListener("click", () => {
   const visible = getVisibleResults();
 
   if (visible.length === 0) {
-    alert("No results. Try something like 'chicken'");
+    alert("Pick a food type first!");
     return;
   }
 
@@ -108,6 +123,9 @@ randomBtn.addEventListener("click", () => {
   });
 });
 
+// =====================
+// UPDATE UI
+// =====================
 function updateUI() {
   const visible = getVisibleResults();
 
@@ -120,6 +138,16 @@ function updateUI() {
   }
 }
 
+// =====================
+// MAP CLICK → DETAILS
+// =====================
 document.addEventListener("restaurantSelected", (e) => {
   showDetails(e.detail);
+});
+
+// =====================
+// FAVORITES UPDATE
+// =====================
+document.addEventListener("favoritesUpdated", () => {
+  renderFavorites();
 });

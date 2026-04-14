@@ -1,9 +1,14 @@
 export function filterRestaurants(restaurants, state) {
   return restaurants.filter(r => {
-    return (
-      r.name.toLowerCase().includes(state.search.toLowerCase()) &&
-      (!state.filters.type || r.type === state.filters.type) &&
-      (!state.filters.rating || r.rating >= state.filters.rating)
-    );
+
+    const matchType = state.filters.type
+      ? r.name.toLowerCase().includes(state.filters.type.toLowerCase())
+      : true;
+
+    const matchRating = state.filters.rating
+      ? (r.rating || 5) >= state.filters.rating
+      : true;
+
+    return matchType && matchRating;
   });
 }
